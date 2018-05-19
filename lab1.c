@@ -12,27 +12,32 @@
 #define BUF_SIZE 1024
 #define BUF_S 256
 
-void Archiving(char *dir, char *zip){
+void Archiving(char *dir, char *zip)
+{
 	DIR *dp;
 	struct dirent *entry;
 	struct stat statbuf;
-	int f,nread,in;
+	int f;
+	int nread;
+	int in;
 	char buf[BUF_SIZE];
 	size_t l;
 	off_t l1;
 
-	if((dp=opendir(dir))==NULL){
-		printf("Error opening directory: %s\n",dir);
+	dp = opendir(dir);
+	if (dp == NULL) {
+		printf("Error opening directory: %s\n", dir);
 		exit(EXIT_FAILURE);
 	}
-	
-	if((f=open(zip,O_WRONLY|O_CREAT,S_IRUSR|S_IWUSR))==-1){
-		printf("Error opening: %s \n",zip);
+
+	f = open(zip, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR)
+	if (f == -1) {
+		printf("Error opening: %s \n", zip);
 		exit(EXIT_FAILURE);
 	}
 	chdir(dir);
-	while ((entry=readdir(dp))!=NULL){
-		if(!(lstat(entry->d_name,&statbuf)==0)){
+	while ((entry = readdir(dp)) != NULL) {
+		if (!(lstat(entry->d_name, &statbuf) == 0)) {
 			printf("Error\n");
 			exit(EXIT_FAILURE);
 		}
@@ -42,7 +47,7 @@ void Archiving(char *dir, char *zip){
 				continue;
 			l = strlen(entry->d_name);
 			if (write(f, "/", 1) == -1) {
-				printf( "Error writing 1\n");
+				printf("Error writing 1\n");
 				exit(EXIT_FAILURE);
 			}
 			if (write(f, &l, sizeof(l)) == -1) {
@@ -114,7 +119,7 @@ void clearbuf(char *buf, size_t l)
 		buf[i] = '\0';
 }
 
-void Decompression(char *zip,char *dir)
+void Decompression(char *zip,  char *dir)
 {
 	char *buf;
 	char buf1[BUF_S] = {0}, b1, buf2[BUF_SIZE];
@@ -127,7 +132,7 @@ void Decompression(char *zip,char *dir)
 
 	f = open(zip, O_RDONLY);
 	if (f < 0) {
-		printf("Error opening file %s\n",zip);
+		printf("Error opening file %s\n", zip);
 		exit(EXIT_FAILURE);
 	}
 	if (chdir(dir) == -1) {
@@ -194,7 +199,7 @@ void Decompression(char *zip,char *dir)
 			break;
 		}
 		case '\0': {
-			printf("No %s file\n",zip);
+			printf("No %s file\n", zip);
 			exit(EXIT_FAILURE);
 		}
 		default: {
@@ -208,8 +213,9 @@ void Decompression(char *zip,char *dir)
 	printf("Completed\n");
 }
 
-int main(int argc, char *argv[]) {
-	if(argc!=3) {
+int main(int argc, char *argv[])
+{
+	if (argc != 3) {
 		printf("Error in the number of arguments\n");
 		exit(EXIT_FAILURE);
 	}
@@ -223,12 +229,12 @@ int main(int argc, char *argv[]) {
 	switch (i) {
 	case '1':
 	{
-		Archiving(argv[1],argv[2]);
+		Archiving(argv[1], argv[2]);
 		exit(EXIT_SUCCESS);
 	}
 	case '2':
 	{
-		Decompression(argv[1],argv[2]);
+		Decompression(argv[1], argv[2]);
 		exit(EXIT_SUCCESS);
 	}
 	default:
