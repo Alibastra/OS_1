@@ -30,7 +30,7 @@ void Archiving(char *dir, char *zip)
 		exit(EXIT_FAILURE);
 	}
 
-	f = open(zip, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR)
+	f = open(zip, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
 	if (f == -1) {
 		printf("Error opening: %s \n", zip);
 		exit(EXIT_FAILURE);
